@@ -9,7 +9,7 @@ namespace UAR
         public UARARKit(ScriptableObject imgCollection) : base(imgCollection)
         {
             Logger.log(Logger.Type.Info, "backend = {0}", GetType().Name);
-            
+
             // world anchor events:
             UnityARSessionNativeInterface.ARUserAnchorAddedEvent += WAnchorAdd;
             UnityARSessionNativeInterface.ARUserAnchorUpdatedEvent += WAnchorUpdate;
@@ -49,6 +49,7 @@ namespace UAR
             if (!tracking)
             {
                 Logger.log(Logger.Type.Info, "tracking paused. Ignore.");
+                return;
             }       
 
             if (!anchors.Add(anchor.identifier))
@@ -108,6 +109,7 @@ namespace UAR
             if (!tracking)
             {
                 Logger.log(Logger.Type.Info, "tracking paused. Ignore.");
+                return;
             }
 
             if (!anchors.Add(anchor.identifier))
