@@ -11,11 +11,17 @@ namespace UAR {
         private void Awake()
         {
             RuntimePlatform platform = Application.platform;
-            Debug.LogFormat("playform is {0}", platform);
+            Debug.LogFormat("platform is {0}", platform);
 
             switch (platform)
             {
                 case RuntimePlatform.WindowsEditor:
+                    {
+                        api = new UARARKit(imgCollection);
+                        break;
+                    }
+
+                case RuntimePlatform.OSXEditor:
                     {
                         api = new UARARKit(imgCollection);
                         break;

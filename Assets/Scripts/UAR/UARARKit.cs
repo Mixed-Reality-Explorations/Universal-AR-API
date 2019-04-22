@@ -33,6 +33,7 @@ namespace UAR
             m.enableAutoFocus = true;
             m.environmentTexturing = UnityAREnvironmentTexturing.UnityAREnvironmentTexturingNone;
             m.detectionImages = (ARReferenceImagesSet)imgCollection;
+            m.maximumNumberOfTrackedImages = m.detectionImages.referenceImages.Length;
 
             // add video component + material:
             UnityARVideo v = Camera.main.gameObject.AddComponent<UnityARVideo>();
