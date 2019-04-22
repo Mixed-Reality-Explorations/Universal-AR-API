@@ -7,6 +7,7 @@ public class UARTest : MonoBehaviour
 {
     public GameObject objPrefab;
     public GameObject obj;
+
     void Start()
     {
         UAR.UAR.IAnchorAdded += (IAnchor anchor) =>
@@ -14,9 +15,13 @@ public class UARTest : MonoBehaviour
             obj = Instantiate(objPrefab, anchor.pose.position, anchor.pose.rotation);
         };
 
-        UAR.UAR.IAnchorAdded += (IAnchor anchor) =>
+        UAR.UAR.IAnchorUpdated += (IAnchor anchor) =>
         {
-            obj.transform.SetPositionAndRotation(anchor.pose.position, anchor.pose.rotation);
+            if (anchor.tracking)
+            {
+                obj.transform.SetPositionAndRotation(anchor.pose.position, anchor.pose.rotation);
+            }
+            
         };
     }
 

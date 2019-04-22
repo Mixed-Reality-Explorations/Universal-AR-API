@@ -153,6 +153,7 @@ namespace UAR
             }
 
             Logger.log(Logger.Type.Info, "dispatch event.");
+            
             bool isTracking = anchor.TrackingState == TrackingState.Tracking;
             IAnchor a = new IAnchor(anchor.DatabaseIndex.ToString(), anchor.CenterPose, isTracking, anchor.Name);
             IAnchorUpdated(a);
