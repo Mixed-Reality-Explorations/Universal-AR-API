@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.XR.iOS;
-using System.Diagnostics;
 
 namespace UAR 
 {
@@ -9,8 +8,8 @@ namespace UAR
     {
         public UARARKit(ScriptableObject imgCollection) : base(imgCollection)
         {
-            UnityEngine.Debug.LogFormat("UA: using ** {0} **", GetType().Name);
-
+            Logger.log(Logger.Type.Info, "backend = {0}", GetType().Name);
+            
             // world anchor events:
             UnityARSessionNativeInterface.ARUserAnchorAddedEvent += WAnchorAdd;
             UnityARSessionNativeInterface.ARUserAnchorUpdatedEvent += WAnchorUpdate;
@@ -45,74 +44,120 @@ namespace UAR
 
         private void WAnchorAdd(ARUserAnchor anchor)
         {
-            if (tracking)
+            Logger.log(Logger.Type.Info, "WAnchorAdd");
+
+            if (!tracking)
             {
-                if (anchors.Add(anchor.identifier))
-                {
-                    WAnchor a = new WAnchor(anchor.identifier, anchor.transform);
-                    WAnchorAdded(a);
-                }
+                Logger.log(Logger.Type.Info, "tracking paused. Ignore.");
+            }       
+
+            if (!anchors.Add(anchor.identifier))
+            {
+                Logger.log(Logger.Type.Warning, "anchor was already added: {0}", anchor.identifier);
+                return;
             }
+
+            if (WAnchorAdded == null)
+            {
+                Logger.log(Logger.Type.Info, "no delegates for this event.");
+                return;
+            }
+
+            Logger.log(Logger.Type.Info, "dispatch event.");
+            WAnchor a = new WAnchor(anchor.identifier, anchor.transform);
+            WAnchorAdded(a);
         }
 
         private void WAnchorUpdate(ARUserAnchor anchor)
         {
-            if (tracking)
-            {
-                WAnchor a = new WAnchor(anchor.identifier, anchor.transform);
+            Logger.log(Logger.Type.Info, "WAnchorUpdate");
 
-                if (anchors.Add(anchor.identifier))
-                {
-                    WAnchorAdded(a);
-                }
-                else
-                {
-                    WAnchorUpdated(a);
-                }
+            if (!tracking)
+            {
+                Logger.log(Logger.Type.Info, "tracking paused. Ignore.");
+                return;
             }
+
+            if (!anchors.Contains(anchor.identifier))
+            {
+                Logger.log(Logger.Type.Warning, "=> WAnchorAdd (tracking was probably off and just turned on).");
+                WAnchorAdd(anchor);
+                return;
+            }
+
+            if (WAnchorUpdated == null)
+            {
+                Logger.log(Logger.Type.Info, "no delegates for this event.");
+                return;
+            }
+
+            Logger.log(Logger.Type.Info, "dispatch event.");
+            WAnchor a = new WAnchor(anchor.identifier, anchor.transform);
+            WAnchorUpdated(a);
         }
 
         private void WAnchorRemove(ARUserAnchor anchor)
         {
-            var s = new StackTrace();
-            var f = s.GetFrame(0);
-            throw new UnityException(string.Format("{0}: [Not Implemented!]", f.GetMethod()));
+            Logger.log(Logger.Type.Error, "WAnchorRemove not implemented");
         }
 
         private void IAnchorAdd(ARImageAnchor anchor)
         {
-            if (tracking)
+            Logger.log(Logger.Type.Info, "IAnchorAdd");
+
+            if (!tracking)
             {
-                if (anchors.Add(anchor.identifier))
-                {
-                    IAnchor a = new IAnchor(anchor.identifier, anchor.transform, anchor.isTracked, anchor.referenceImageName);
-                    WAnchorAdded(a);
-                }
+                Logger.log(Logger.Type.Info, "tracking paused. Ignore.");
             }
+
+            if (!anchors.Add(anchor.identifier))
+            {
+                Logger.log(Logger.Type.Warning, "anchor was already added: {0}", anchor.identifier);
+                return;
+            }
+
+            if (IAnchorAdded == null)
+            {
+                Logger.log(Logger.Type.Info, "no delegates for this event.");
+                return;
+            }
+
+            Logger.log(Logger.Type.Info, "dispatch event.");
+            IAnchor a = new IAnchor(anchor.identifier, anchor.transform, anchor.isTracked, anchor.referenceImageName);
+            IAnchorAdded(a);
         }
 
         private void IAnchorUpdate(ARImageAnchor anchor)
         {
-            if (tracking)
-            {
-                IAnchor a = new IAnchor(anchor.identifier, anchor.transform, anchor.isTracked, anchor.referenceImageName);
+            Logger.log(Logger.Type.Info, "IAnchorUpdate");
 
-                if (anchors.Add(anchor.identifier))
-                {
-                    WAnchorAdded(a);
-                }
-                else
-                {
-                    WAnchorUpdated(a);
-                }
+            if (!tracking)
+            {
+                Logger.log(Logger.Type.Info, "tracking paused. Ignore.");
+                return;
             }
+
+            if (!anchors.Contains(anchor.identifier))
+            {
+                Logger.log(Logger.Type.Warning, "=> IAnchorAdd (tracking was probably off and just turned on).");
+                IAnchorAdd(anchor);
+                return;
+            }
+
+            if (IAnchorUpdated == null)
+            {
+                Logger.log(Logger.Type.Info, "no delegates for this event.");
+                return;
+            }
+
+            Logger.log(Logger.Type.Info, "dispatch event.");
+            IAnchor a = new IAnchor(anchor.identifier, anchor.transform, anchor.isTracked, anchor.referenceImageName);
+            IAnchorUpdated(a);
         }
 
         private void IAnchorRemove(ARImageAnchor anchor)
         {
-            var s = new StackTrace();
-            var f = s.GetFrame(0);
-            throw new UnityException(string.Format("{0}: [Not Implemented!]", f.GetMethod()));
+            Logger.log(Logger.Type.Error, "IAnchorRemove not implemented");
         }
     }
 }

@@ -11,7 +11,7 @@ namespace UAR {
         private void Awake()
         {
             RuntimePlatform platform = Application.platform;
-            Debug.LogFormat("platform is {0}", platform);
+            Logger.log(Logger.Type.Info, "platform is {0}", platform);
 
             switch (platform)
             {
