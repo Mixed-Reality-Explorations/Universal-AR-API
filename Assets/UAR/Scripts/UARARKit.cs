@@ -4,11 +4,17 @@ using UnityEngine.XR.iOS;
 namespace UAR 
 {
 
-    public class UARARKit : Api
+    public class UARARKit : UAR
     {
-        public UARARKit(ScriptableObject imgCollection) : base(imgCollection)
+        public static void init(ScriptableObject imgCollection, GameObject camera)
         {
-            Logger.log(Logger.Type.Info, "backend = {0}", GetType().Name);
+            Logger.log(Logger.Type.Info, "backend = ARKit");
+            
+            if (imgCollection == null)
+            {
+                Logger.log(Logger.Type.Error, "no image collection!");
+                return;
+            }
 
             // world anchor events:
             UnityARSessionNativeInterface.ARUserAnchorAddedEvent += WAnchorAdd;
@@ -19,30 +25,14 @@ namespace UAR
             UnityARSessionNativeInterface.ARImageAnchorAddedEvent += IAnchorAdd;
             UnityARSessionNativeInterface.ARImageAnchorUpdatedEvent += IAnchorUpdate;
             UnityARSessionNativeInterface.ARImageAnchorRemovedEvent += IAnchorRemove;
-            
-            // add camera manager:
-            UnityARCameraManager m = Camera.main.gameObject.AddComponent<UnityARCameraManager>();
-            m.m_camera = Camera.main;
 
-            // configuration:
-            m.startAlignment = UnityARAlignment.UnityARAlignmentGravity;
-            m.planeDetection = UnityARPlaneDetection.None;
-            m.getPointCloud = true;
-            m.enableLightEstimation = true;
-            m.enableAutoFocus = true;
-            m.environmentTexturing = UnityAREnvironmentTexturing.UnityAREnvironmentTexturingNone;
-            m.detectionImages = (ARReferenceImagesSet)imgCollection;
-            m.maximumNumberOfTrackedImages = m.detectionImages.referenceImages.Length;
-
-            // add video component + material:
-            UnityARVideo v = Camera.main.gameObject.AddComponent<UnityARVideo>();
-            v.m_ClearMaterial = (Material)Resources.Load<Material>("YUVMaterial");
-
-            // add near/far component:
-            Camera.main.gameObject.AddComponent<UnityARCameraNearFar>();
+            var manager = camera.GetComponent<UnityARCameraManager>();
+            manager.detectionImages = (ARReferenceImagesSet)imgCollection;
+            manager.maximumNumberOfTrackedImages = manager.detectionImages.referenceImages.Length;
+            camera.SetActive(true);
         }
 
-        private void WAnchorAdd(ARUserAnchor anchor)
+        private static void WAnchorAdd(ARUserAnchor anchor)
         {
             Logger.log(Logger.Type.Info, "WAnchorAdd");
 
@@ -65,11 +55,11 @@ namespace UAR
             }
 
             Logger.log(Logger.Type.Info, "dispatch event.");
-            WAnchor a = new WAnchor(anchor.identifier, anchor.transform);
+            WAnchor a = new WAnchor(anchor.identifier, UnityARMatrixOps.GetPose(anchor.transform));
             WAnchorAdded(a);
         }
 
-        private void WAnchorUpdate(ARUserAnchor anchor)
+        private static void WAnchorUpdate(ARUserAnchor anchor)
         {
             Logger.log(Logger.Type.Info, "WAnchorUpdate");
 
@@ -93,16 +83,16 @@ namespace UAR
             }
 
             Logger.log(Logger.Type.Info, "dispatch event.");
-            WAnchor a = new WAnchor(anchor.identifier, anchor.transform);
+            WAnchor a = new WAnchor(anchor.identifier, UnityARMatrixOps.GetPose(anchor.transform));
             WAnchorUpdated(a);
         }
 
-        private void WAnchorRemove(ARUserAnchor anchor)
+        private static void WAnchorRemove(ARUserAnchor anchor)
         {
             Logger.log(Logger.Type.Error, "WAnchorRemove not implemented");
         }
 
-        private void IAnchorAdd(ARImageAnchor anchor)
+        private static void IAnchorAdd(ARImageAnchor anchor)
         {
             Logger.log(Logger.Type.Info, "IAnchorAdd");
 
@@ -125,11 +115,11 @@ namespace UAR
             }
 
             Logger.log(Logger.Type.Info, "dispatch event.");
-            IAnchor a = new IAnchor(anchor.identifier, anchor.transform, anchor.isTracked, anchor.referenceImageName);
+            IAnchor a = new IAnchor(anchor.identifier, UnityARMatrixOps.GetPose(anchor.transform), anchor.isTracked, anchor.referenceImageName);
             IAnchorAdded(a);
         }
 
-        private void IAnchorUpdate(ARImageAnchor anchor)
+        private static void IAnchorUpdate(ARImageAnchor anchor)
         {
             Logger.log(Logger.Type.Info, "IAnchorUpdate");
 
@@ -153,11 +143,11 @@ namespace UAR
             }
 
             Logger.log(Logger.Type.Info, "dispatch event.");
-            IAnchor a = new IAnchor(anchor.identifier, anchor.transform, anchor.isTracked, anchor.referenceImageName);
+            IAnchor a = new IAnchor(anchor.identifier, UnityARMatrixOps.GetPose(anchor.transform), anchor.isTracked, anchor.referenceImageName);
             IAnchorUpdated(a);
         }
 
-        private void IAnchorRemove(ARImageAnchor anchor)
+        private static void IAnchorRemove(ARImageAnchor anchor)
         {
             Logger.log(Logger.Type.Error, "IAnchorRemove not implemented");
         }
