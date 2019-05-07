@@ -5,7 +5,7 @@ Eventually, ARFoundation will cover this use-case. But as of May 2019, it's stil
 
 This code exposes an API that allows a developer to focus on the interaction and experience design. The wrapper automatically detects which hardware the app is built for, and correctly calls the appropriate function for each operating system.
 
-## Verify 
+## Verify / Demo 
 1. Clone the repo.
 2. Open the folder in Unity (tested on 2018.3.8f1)
 3. In the project view, open the UAR folder -> Scenes -> UARTest
@@ -19,3 +19,24 @@ This code exposes an API that allows a developer to focus on the interaction and
     
 
 ## Usage
+1. Download the repo.
+2. Import the UAR package into your project.
+3. Include a UARInit prefab into your scene.
+4. The UARInit prefab includes an ARCore Ccmera as well as an ARKit camera.
+    - To change the settings of either camera, double-click on the camera and update the settings.
+5. Instead of calling the ARCore or ARKit APIs directly, call the Universal AR API instead.
+
+```
+public static Action<IAnchor> IAnchorAdded;
+public static Action<IAnchor> IAnchorUpdated;
+public static Action<IAnchor> IAnchorRemoved;
+
+public static Action<WAnchor> WAnchorAdded;
+public static Action<WAnchor> WAnchorUpdated;
+public static Action<WAnchor> WAnchorRemoved;
+```
+
+6. IAnchor actions are Image Anchor actions, and WAnchor actions are World Anchor actions.
+7. See the [UARTest example code](https://github.com/Mixed-Reality-Explorations/Universal-AR-API/blob/master/Assets/UAR/Scripts/UARTest.cs) for the simple usage example in the above verification demo.
+
+![Imgur](https://i.imgur.com/fKJdX7d.png)
