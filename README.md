@@ -6,8 +6,8 @@ Eventually, ARFoundation will cover this use-case. But as of May 2019, it's stil
 This code exposes an API that allows a developer to focus on the interaction and experience design. The wrapper automatically detects which hardware the app is built for, and correctly calls the appropriate function for each operating system.
 
 ## Verify / Demo 
-1. Clone the repo.
-2. Open the folder in Unity (tested on 2018.3.8f1)
+1. Clone the repo. The repo contains the wrapper as well as the example images for both ARCore (Android) and ARKit (iPhone).
+2. Open the folder in Unity (tested on 2018.3.8f1).
 3. In the project view, open the UAR folder -> Scenes -> UARTest
 4. Open Build Settings. Select the platform you'd like to build for (Android or iOS). This may involve importing many assets to your system, which may take some time.
 5. Once you hit build, it'll generate the app file. 
@@ -15,7 +15,8 @@ This code exposes an API that allows a developer to focus on the interaction and
         - It creates an .apk file that you can push to your device using ```adb install <apk name>```
         - Once uploaded to your phone, the app is called "arapi".
         - Open the app on your phone, then open one of [the Android example images included in this repo.](https://github.com/Mixed-Reality-Explorations/Universal-AR-API/tree/master/Assets/GoogleARCore/Examples/AugmentedImage/Images)
-        - Pointing your phone at the image should make a grey block appear in front of the image.
+        - Pointing your phone at the image should make a grey block appear in front of the image, as shown below.
+        ![Simple demo app](https://i.imgur.com/uvikq22.jpg)
     
 
 ## Usage
@@ -38,5 +39,6 @@ public static Action<WAnchor> WAnchorRemoved;
 
 6. IAnchor actions are Image Anchor actions, and WAnchor actions are World Anchor actions.
 7. See the [UARTest example code](https://github.com/Mixed-Reality-Explorations/Universal-AR-API/blob/master/Assets/UAR/Scripts/UARTest.cs) for the simple usage example in the above verification demo.
+
 
 ![Imgur](https://i.imgur.com/fKJdX7d.png)
