@@ -1,7 +1,7 @@
 # Universal-AR-API
 This repo contains a unity wrapper around ARKit / ARCore APIs for Image Recognition.
 
-Eventually, ARFoundation will cover this use-case. But as of May 2019, it's still extremely difficult to write an image-recognition AR app that works out of the box on both Android and iOS. 
+Eventually, [ARFoundation](https://blogs.unity3d.com/2018/12/18/unitys-handheld-ar-ecosystem-ar-foundation-arcore-and-arkit/) will cover this use-case. But as of May 2019, they haven't added that functionality to their code, and it's still extremely difficult to write an image-recognition AR app that works out of the box on both Android and iOS. 
 
 This code exposes an API that allows a developer to focus on the interaction and experience design. The wrapper automatically detects which hardware the app is built for, and correctly calls the appropriate function for each operating system.
 
@@ -17,7 +17,8 @@ This code exposes an API that allows a developer to focus on the interaction and
         - Open the app on your phone, then open one of [the Android example images included in this repo.](https://github.com/Mixed-Reality-Explorations/Universal-AR-API/tree/master/Assets/GoogleARCore/Examples/AugmentedImage/Images)
         - Pointing your phone at the image should make a grey block appear in front of the image, as shown below.
         ![Simple demo app](https://i.imgur.com/uvikq22.jpg)
-    
+
+Once you've gotten the gray box to appear, you should be all set to start developing!
 
 ## Usage
 1. Download the repo.
